@@ -83,4 +83,32 @@ app.delete("/courses/:id", (request: Request, response: Response) => {
   })
 })
 
+app.put("/courses/:id", (request: Request, response: Response) => {
+  const id = Number(request.params.id)
+
+  const courseName = request.body.name
+
+  const course = courses.find((item) => {
+    return id === item.id
+  })
+
+  if (course === undefined ){
+    return response.status(404).json({
+      message: "Curso não encontrado"
+    })
+  }
+
+  if (typeof courseName !== "string" || courseName.trim() === "") {
+    return response.status(400).json({
+      message: "Adicione um nome válido"  
+    })
+  }
+  course.name = courseName
+
+  response.status(200).json({
+    message: "Curso atualizado com sucesso",
+    course: course
+  })
+})
+
 app.listen(3333, () => console.log(`Server is running on port 3333`))
